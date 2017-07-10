@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Currency Converter with Accounting.js</title>
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.0/normalize.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- jquery -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="js/accounting.js"></script>
+    <script src="../_nav/js/nav.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+    <!-- nav script -->
+    <div class="demo-meta">
+        <h1 class="demo-title">Accounting.js</h1>
+        <p class="demo-desc">Using Accounting.js to build a simple currency converter page.</p>
+    </div>
+
+    <!-- demo content -->
+    <div class="demo-wrapper">
+        <div class="currency-option">
+            <div class="row">
+                <h4 class="heading">From</h4>
+                <select id="input-currency" disabled>
+				<option value="USD" data-symbol="$" selected>US Dollar</option>
+			</select>
+                <span id="input-symbol">$</span> <input id="input-number" class="input" type="number" min="0">
+            </div>
+
+            <div class="row">
+                <h4 class="heading">To</h4>
+                <select id="output-currency">
+				<option value="krw" data-symbol="₩" selected>Korean Won</option>
+				<option value="jpy" data-symbol="¥">Japanese Yen</option>
+			</select>
+                <span id="output-number">₩ 0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- === -->
+    <script>
+        $(document).ready(function() {
+            var jpy = accounting.toFixed(102.24, 0),
+                krw = accounting.toFixed(1077.80, 0),
+                getCurrency = function(elem) {
+                    var $curAbbr = elem.find(':selected').val(),
+                        $curSign = elem.find(':selected').data('symbol');
+                    return {
+                        'symbol': $curSign,
+                        'value': $curAbbr,
+                    };
+                };
+
+            $('#output-currency, #input-number').on('change keyup keydown', function() {
+                // get currency
+                var $currency = getCurrency($('#output-currency')),
+                    $symbol = $currency['symbol'],
+                    $val = $currency['value'];
+
+                // get number
+                var mulitplyNum = ($val == 'jpy') ? jpy : krw,
+                    $getInput = $('#input-number').val(),
+                    $getTotal = ($getInput * mulitplyNum);
+
+                //format the number
+                var number = accounting.formatMoney($getTotal, {
+                    symbol: $symbol,
+                    precision: 0,
+                    thousand: ',',
+                    format: {
+                        pos: '%s %v',
+                        zero: '%s  0',
+                    }
+                });
+                //output
+                $('#output-number').text(number);
+            });
+        });
+    </script>
+</body>
+
+</html>

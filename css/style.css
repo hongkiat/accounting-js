@@ -1,0 +1,13 @@
+body {
+	background-color: #E9EAED;
+}
+.heading {
+	font-weight: normal;
+	color: #141823;
+}
+.currency-option {
+	width: 350px;
+	margin-top: 150px;
+	margin-right: auto;
+	margin-left: auto;
+}
